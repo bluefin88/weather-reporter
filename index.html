@@ -1,0 +1,107 @@
+<!--
+TO DO
++ Bootstrap It up
++ Got JSON Response from Open Weather API
++ Learn JSON?!
+- Add additional information like humidity
+- Add cases for weathers
+- Look more deeply into open weather.api
++ Code animation for clouds
+
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Reporter</title> 
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/bootstrap-theme.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- Icon Font (Linear) -->
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="bootstrap/bootstrap.min.js"></script>
+    <!-- Fontawesome -->
+    <script src="https://use.fontawesome.com/488ce23061.js"></script>
+    
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class = "row text-center">
+        <h1>Weather Reporter</h1>
+    </div>
+    <div class = "row text-center">
+        <div class = "col-xs-12 ">
+            <!-- json debug
+            <div class = "json">
+                json return
+            </div>
+            -->
+            <h2>
+                <div class = "location">
+                    <!--Location Goes Here-->
+                </div>
+            </h2>
+            <h2>
+                <div class = "temperature">
+                    <!--Temperature Goes Here-->
+                </div>
+            </h2>
+            <div class = "weather">
+                <!--Weather Goes Here-->
+            </div>
+        </div>
+    </div>
+    <div class = "row text-center">
+        <div class = "col-xs-12">
+            <button id = "getMessage" class = "btn btn-primary">
+            Get Weather
+            </button>
+        </div>
+    </div>
+</div>
+    
+<script>
+    
+$(document).ready(function() {
+    $("#getMessage").on("click", function(){
+
+        $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=HongKong&APPID=62431f42772eac5ad4c4f69b37d69f6c", function(json){
+            myjson = json;
+            $(".json").html(JSON.stringify(myjson));  
+            console.log(myjson);
+            console.log(myjson.weather[0].main); 
+            
+            // Set Location
+            $(".location").html(myjson.name);
+            
+            // Set Temperature
+            // Convert Kelvin to Celcius and round to two decimal places
+            celcius = roundToTwo(myjson.main.temp - 273.15);
+            $(".temperature").html(celcius + "&#8451");
+            
+            // Set Weather
+            if(myjson.weather[0].main == "Clear"){
+                $(".weather").html("<div class='rotating icon'> <span class='lnr lnr-sun'></span> </div> <h2>Grab your sunglasses.</h2>");
+            }
+            else if(myjson.weather[0].main == "Clouds"){
+                $(".weather").html("<div class='bounce icon'> <span class='lnr lnr-cloud'></span> </div> <h2>It's a bit cloudy.</h2>");
+            }
+        });
+    });
+});
+    
+// Rounding to Two Decimal Places 
+function roundToTwo(num) {    
+    return +(Math.round(num + "e+2")  + "e-2");
+}
+   
+</script>
+     
+    
+</body>
+</html>
